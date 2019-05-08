@@ -10,8 +10,7 @@ public class GuitarSpec
     private Wood backWood;
     private Wood topWood;
 
-    GuitarSpec(Builder builder, String model, Type type,
-               int numStrings, Wood backWood, Wood topWood)
+    GuitarSpec(Builder builder, String model, Type type, int numStrings, Wood backWood, Wood topWood)
     {
         this.builder = builder;
         this.model = model;
