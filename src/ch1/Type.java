@@ -2,7 +2,6 @@ package ch1;
 
 public enum Type
 {
-
     ACOUSTIC, ELECTRIC;
 
     public String toString()
