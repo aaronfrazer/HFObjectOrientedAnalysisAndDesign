@@ -1,6 +1,6 @@
 package ch1;
 
-public class GuitarSpec
+class GuitarSpec
 {
 
     private Builder builder;
@@ -35,7 +35,7 @@ public class GuitarSpec
         return type;
     }
 
-    public int getNumStrings()
+    int getNumStrings()
     {
         return numStrings;
     }
@@ -54,8 +54,7 @@ public class GuitarSpec
     {
         if (builder != otherSpec.builder)
             return false;
-        if ((model != null) && (!model.equals("")) &&
-                (!model.toLowerCase().equals(otherSpec.model.toLowerCase())))
+        if (!model.toLowerCase().contains(otherSpec.model.toLowerCase()))
             return false;
         if (type != otherSpec.type)
             return false;

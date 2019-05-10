@@ -3,7 +3,9 @@ package ch1;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ public class Main extends Application
     private Stage window;
     private Scene scene;
     private GridPane gridPane = new GridPane();
+    private GridPane gridPaneTable = new GridPane();
 
     private Inventory inventory = new Inventory();
 
@@ -23,7 +26,6 @@ public class Main extends Application
     private Label labelNumStrings = new Label("Num Strings: ");
     private Label labelBackWood = new Label("Back Wood: ");
     private Label labelTopWood = new Label("Top Wood: ");
-
     private ChoiceBox<String> choiceBoxBuilder = new ChoiceBox<>();
     private TextField textFieldModel = new TextField("Stratocastor");
     private ArrayList<RadioButton> radioButtonsType = new ArrayList<>();
@@ -31,8 +33,19 @@ public class Main extends Application
     private Spinner<Integer> spinnerNumStrings = new Spinner<>();
     private ChoiceBox<String> choiceBoxBackWood = new ChoiceBox<>();
     private ChoiceBox<String> choiceBoxTopWood = new ChoiceBox<>();
-
     private Button searchButton = new Button("Search Inventory");
+
+    private Text numHeaderRow = new Text();
+    private Text serialNumHeaderRow = new Text("Serial Number");
+    private Text priceHeaderRow = new Text("Price");
+    private Text manufacturerHeaderRow = new Text("Manufacturer");
+    private Text modelHeaderRow = new Text("Model");
+    private Text typeHeaderRow = new Text("Type");
+    private Text numStringsHeaderRow = new Text("Strings");
+    private Text backWoodHeaderRow = new Text("Back Wood");
+    private Text topWoodHeaderRow = new Text("Top Wood");
+
+    private Text[][] resultArray = new Text[20][10];
 
     public static void main(String[] args)
     {
@@ -42,6 +55,58 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage)
     {
+        numHeaderRow.setStyle("-fx-font-weight: bold");
+        serialNumHeaderRow.setStyle("-fx-font-weight: bold");
+        priceHeaderRow.setStyle("-fx-font-weight: bold");
+        manufacturerHeaderRow.setStyle("-fx-font-weight: bold");
+        modelHeaderRow.setStyle("-fx-font-weight: bold");
+        typeHeaderRow.setStyle("-fx-font-weight: bold");
+        numStringsHeaderRow.setStyle("-fx-font-weight: bold");
+        backWoodHeaderRow.setStyle("-fx-font-weight: bold");
+        topWoodHeaderRow.setStyle("-fx-font-weight: bold");
+
+        ColumnConstraints columnLabels = new ColumnConstraints();
+        ColumnConstraints columnFields = new ColumnConstraints();
+        ColumnConstraints columnBlank = new ColumnConstraints();
+        columnLabels.setPercentWidth(25);
+        columnFields.setPercentWidth(50);
+        columnBlank.setPercentWidth(25);
+        gridPane.getColumnConstraints().add(columnLabels);
+        gridPane.getColumnConstraints().add(columnFields);
+        gridPane.getColumnConstraints().add(columnBlank);
+
+        ColumnConstraints columnRow = new ColumnConstraints();
+        ColumnConstraints columnSerialNum = new ColumnConstraints();
+        ColumnConstraints columnPrice = new ColumnConstraints();
+        ColumnConstraints columnManufacturer = new ColumnConstraints();
+        ColumnConstraints columnModel = new ColumnConstraints();
+        ColumnConstraints columnType = new ColumnConstraints();
+        ColumnConstraints columnNumStrings = new ColumnConstraints();
+        ColumnConstraints columnBackWood = new ColumnConstraints();
+        ColumnConstraints columnTopWood = new ColumnConstraints();
+        columnRow.setPercentWidth(5);
+        columnSerialNum.setPercentWidth(10);
+        columnPrice.setPercentWidth(10);
+        columnManufacturer.setPercentWidth(20);
+        columnModel.setPercentWidth(20);
+        columnType.setPercentWidth(10);
+        columnNumStrings.setPercentWidth(5);
+        columnBackWood.setPercentWidth(10);
+        columnTopWood.setPercentWidth(10);
+        gridPaneTable.getColumnConstraints().add(columnRow);
+        gridPaneTable.getColumnConstraints().add(columnSerialNum);
+        gridPaneTable.getColumnConstraints().add(columnPrice);
+        gridPaneTable.getColumnConstraints().add(columnManufacturer);
+        gridPaneTable.getColumnConstraints().add(columnModel);
+        gridPaneTable.getColumnConstraints().add(columnType);
+        gridPaneTable.getColumnConstraints().add(columnNumStrings);
+        gridPaneTable.getColumnConstraints().add(columnBackWood);
+        gridPaneTable.getColumnConstraints().add(columnTopWood);
+
+        gridPaneTable.setGridLinesVisible(true);
+        gridPane.setHgap(50);
+        gridPane.setVgap(20);
+
         initializeInventory(inventory);
 
         for (Builder b : Builder.values())
@@ -86,6 +151,18 @@ public class Main extends Application
         gridPane.add(choiceBoxTopWood, 1, x, 1, 1);
         x++;
         gridPane.add(searchButton, 0, x, 2, 1);
+        x++;
+        gridPane.add(gridPaneTable, 0, x, 3, 1);
+
+        gridPaneTable.add(numHeaderRow, 0, 0, 1, 1);
+        gridPaneTable.add(serialNumHeaderRow, 1, 0, 1, 1);
+        gridPaneTable.add(priceHeaderRow, 2, 0, 1, 1);
+        gridPaneTable.add(manufacturerHeaderRow, 3, 0, 1, 1);
+        gridPaneTable.add(modelHeaderRow, 4, 0, 1, 1);
+        gridPaneTable.add(typeHeaderRow, 5, 0, 1, 1);
+        gridPaneTable.add(numStringsHeaderRow, 6, 0, 1, 1);
+        gridPaneTable.add(backWoodHeaderRow, 7, 0, 1, 1);
+        gridPaneTable.add(topWoodHeaderRow, 8, 0, 1, 1);
 
         scene = new Scene(gridPane, 1000, 550);
         window = primaryStage;
@@ -241,38 +318,62 @@ public class Main extends Application
                 topWood = Wood.SITKA;
         }
 
-        // TODO: What if one of these fields are null?
         GuitarSpec whatUserLikes = new GuitarSpec(builder, model, type, numStrings, backWood, topWood);
-        GuitarSpec whatErinLikes = new GuitarSpec(Builder.FENDER, "Stratocastor", Type.ELECTRIC, 6, Wood.ALDER, Wood.ALDER);
 
         List matchingGuitars = inventory.search(whatUserLikes);
 
+        // Clear result array
+        for (int i = 0; i < resultArray.length; i++)
+        {
+            for (int j = 0; j < resultArray[i].length; j++)
+            {
+                resultArray[i][j] = new Text();
+                resultArray[i][j].setText("");
+            }
+        }
+
+        int numResults = 0;
+
         if (!matchingGuitars.isEmpty())
         {
-            System.out.println("Aaron, you might like these guitars:");
             for (Object matchingGuitar : matchingGuitars)
             {
+                numResults++;
                 Guitar guitar = (Guitar) matchingGuitar;
                 GuitarSpec spec = guitar.getSpec();
-                System.out.println("  We have a " +
-                        spec.getBuilder() + " " + spec.getModel() + " " +
-                        spec.getType() + " guitar:\n     " +
-                        spec.getBackWood() + " back and sides,\n     " +
-                        spec.getTopWood() + " top.\n  You can have it for only $" +
-                        guitar.getPrice() + "!\n  ----");
+
+                resultArray[0][numResults].setText(String.valueOf(numResults));
+                resultArray[1][numResults].setText(guitar.getSerialNumber());
+                resultArray[2][numResults].setText(String.valueOf(guitar.getPrice()));
+                resultArray[3][numResults].setText(spec.getBuilder().toString());
+                resultArray[4][numResults].setText(spec.getModel());
+                resultArray[5][numResults].setText(String.valueOf(spec.getNumStrings()));
+                resultArray[6][numResults].setText(spec.getType().toString());
+                resultArray[7][numResults].setText(spec.getBackWood().toString());
+                resultArray[8][numResults].setText(spec.getTopWood().toString());
+
+                // add to table
+                gridPaneTable.add(resultArray[0][numResults], 0, numResults, 1, 1);
+                gridPaneTable.add(resultArray[1][numResults], 1, numResults, 1, 1);
+                gridPaneTable.add(resultArray[2][numResults], 2, numResults, 1, 1);
+                gridPaneTable.add(resultArray[3][numResults], 3, numResults, 1, 1);
+                gridPaneTable.add(resultArray[4][numResults], 4, numResults, 1, 1);
+                gridPaneTable.add(resultArray[5][numResults], 5, numResults, 1, 1);
+                gridPaneTable.add(resultArray[6][numResults], 6, numResults, 1, 1);
+                gridPaneTable.add(resultArray[7][numResults], 7, numResults, 1, 1);
+                gridPaneTable.add(resultArray[8][numResults], 8, numResults, 1, 1);
             }
         } else
         {
             System.out.println("Sorry, Aaron, we have nothing for you.");
         }
 
-        System.out.println(builder + ": " + Builder.FENDER);
-        System.out.println(model + ": Stratocastor");
-        System.out.println(type + ": " + Type.ELECTRIC);
-        System.out.println(numStrings + ": " + 6);
-        System.out.println(backWood + ": " + Wood.ALDER);
-        System.out.println(topWood + ": " + Wood.ALDER);
-
+//        System.out.println(builder + ": " + Builder.FENDER);
+//        System.out.println(model + ": Stratocastor");
+//        System.out.println(type + ": " + Type.ELECTRIC);
+//        System.out.println(numStrings + ": " + 6);
+//        System.out.println(backWood + ": " + Wood.ALDER);
+//        System.out.println(topWood + ": " + Wood.ALDER);
     }
 
     /**
