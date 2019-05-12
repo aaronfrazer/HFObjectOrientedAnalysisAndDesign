@@ -4,7 +4,8 @@ public class DogDoorSimulator
 {
     public static void main(String[] args)
     {
-        DogDoor door = new DogDoor();
+        Dog dog = new Dog();
+        DogDoor door = new DogDoor(dog);
         Remote remote = new Remote(door);
 
         System.out.println("Fido barks to go outside...");

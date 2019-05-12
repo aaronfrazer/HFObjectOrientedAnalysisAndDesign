@@ -1,36 +1,32 @@
 package ch2;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 class Remote
 {
-    private DogDoor door;
+    private static DogDoor door;
+
+    // Time it takes to close the door automatically
+    static Timeline timelineCloseDoor = new Timeline(new KeyFrame(Duration.seconds(5), event -> door.close()));
 
     Remote(DogDoor door)
     {
-        this.door = door;
+        Remote.door = door;
     }
 
     void pressButton()
     {
         System.out.println("Pressing the remote control button...");
-        if (door.isOpen())
+        if (DogDoor.isOpen())
         {
             door.close();
         } else
         {
             door.open();
 
-            final Timer timer = new Timer();
-            timer.schedule(new TimerTask()
-            {
-                public void run()
-                {
-                    door.close();
-                    timer.cancel();
-                }
-            }, 5000);
+            timelineCloseDoor.play();
         }
     }
 }

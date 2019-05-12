@@ -6,16 +6,22 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 import java.io.File;
 
 public class Main extends Application
 {
-    private DogDoor door = new DogDoor();
+    private Dog dog = new Dog();
+    private DogDoor door = new DogDoor(dog);
     private Remote remote = new Remote(door);
 
     private static String imageDir = "res/images/ch2/";
+    private static String soundDir = "res/sounds/ch2/";
+
+    private static MediaPlayer mediaPlayer = new MediaPlayer(new Media(new File(soundDir + "DogBark.wav").toURI().toString()));
 
     private Stage window;
     private Scene scene;
@@ -64,6 +70,17 @@ public class Main extends Application
         scene = new Scene(gridPane, 1200, 600);
         window.setScene(scene);
         window.show();
+
+        // Dog barks after 5 seconds
+        Dog.timelineBark.play();
+    }
+
+    /**
+     * Makes the sound of a dog barking.
+     */
+    static void bark()
+    {
+        mediaPlayer.play();
     }
 
     /**
