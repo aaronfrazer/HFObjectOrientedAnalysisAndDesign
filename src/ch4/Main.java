@@ -1,4 +1,4 @@
-package ch3;
+package ch4;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -14,24 +14,23 @@ import java.io.File;
 
 public class Main extends Application
 {
-    private static Dog dog = new Dog();
-    private static DogDoor door = new DogDoor(dog);
+    private static Dog bruce = new Dog("Bruce", new Bark("rowlf"), 5);
+    private static Dog fido = new Dog("Fido", new Bark("yip"), 2);
+    private static DogDoor door = new DogDoor(bruce);
     static BarkRecognizer recognizer = new BarkRecognizer(door);
     private Remote remote = new Remote(door);
 
-    private static String imageDir = "res/images/ch2/";
-    private static String soundDir = "res/sounds/ch2/";
-
-    private static MediaPlayer mediaPlayer = new MediaPlayer(new Media(new File(soundDir + "DogBark.wav").toURI().toString()));
+    private static String imageDir = "res/images/";
+    private static String soundDir = "res/sounds/";
 
     private Stage window;
     private Scene scene;
     private GridPane gridPane = new GridPane();
 
-    static Image dogDoorOpenImage = new Image(new File(imageDir + "DogDoorOpen.jpg").toURI().toString());
-    static Image dogDoorCloseImage = new Image(new File(imageDir + "DogDoorClose.jpg").toURI().toString());
+    static Image dogDoorOpenImage = new Image(new File(imageDir + "DogDoorOpen.png").toURI().toString());
+    static Image dogDoorCloseImage = new Image(new File(imageDir + "DogDoorClose.png").toURI().toString());
     private static Image dogInsideImage = new Image(new File(imageDir + "DogInside.png").toURI().toString());
-    private static Image dogOutsideImage = new Image(new File(imageDir + "DogOutside.jpg").toURI().toString());
+    private static Image dogOutsideImage = new Image(new File(imageDir + "DogOutside.png").toURI().toString());
 
     static ImageView dogDoorImageView = new ImageView(dogDoorCloseImage);
     static ImageView dogInsideImageView = new ImageView(dogInsideImage);
@@ -50,6 +49,11 @@ public class Main extends Application
         window = primaryStage;
         window.setTitle("Dog Door Simulator");
         window.setOnCloseRequest(e -> closeProgram());
+
+        door.addAllowedBark(new Bark("rowlf"));
+        door.addAllowedBark(new Bark("rooowlf"));
+        door.addAllowedBark(new Bark("rawlf"));
+        door.addAllowedBark(new Bark("woof"));
 
         dogOutsideImageView.setVisible(false);
 
@@ -73,14 +77,17 @@ public class Main extends Application
         window.show();
 
         // Dog barks after 5 seconds
-        Dog.timelineBark.play();
+        bruce.timelineBark.play();
+        fido.timelineBark.play();
     }
 
     /**
-     * Makes the sound of a dog barking.
+     * Makes the sound of a bruce barking.
      */
-    static void bark()
+    static void bark(String soundFile)
     {
+        Media sound = new Media(new File(soundDir + soundFile + ".wav").toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.play();
     }
 
