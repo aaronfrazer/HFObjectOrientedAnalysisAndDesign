@@ -1,12 +1,13 @@
-package ch1;
+package ch1235;
 
-public class Guitar
+public class Instrument
 {
+
     private String serialNumber;
     private double price;
-    private GuitarSpec spec;
+    private InstrumentSpec spec;
 
-    Guitar(String serialNumber, double price, GuitarSpec spec)
+    Instrument(String serialNumber, double price, InstrumentSpec spec)
     {
         this.serialNumber = serialNumber;
         this.price = price;
@@ -28,7 +29,7 @@ public class Guitar
         this.price = newPrice;
     }
 
-    GuitarSpec getSpec()
+    InstrumentSpec getSpec()
     {
         return spec;
     }
