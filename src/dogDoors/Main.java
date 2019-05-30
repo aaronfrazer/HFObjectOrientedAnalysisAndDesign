@@ -1,4 +1,4 @@
-package ch4;
+package dogDoors;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

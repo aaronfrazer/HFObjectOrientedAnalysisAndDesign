@@ -1,4 +1,4 @@
-package ch1235;
+package ricksGuitars;
 
 import java.util.HashMap;
 import java.util.Map;

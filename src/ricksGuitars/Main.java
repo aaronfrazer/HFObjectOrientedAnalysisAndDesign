@@ -1,4 +1,4 @@
-package ch1235;
+package ricksGuitars;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

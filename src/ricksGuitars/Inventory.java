@@ -1,4 +1,4 @@
-package ch1235;
+package ricksGuitars;
 
 import java.util.LinkedList;
 import java.util.List;

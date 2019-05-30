@@ -1,4 +1,4 @@
-package ch1235;
+package ricksGuitars;
 
 public enum Style
 {
